@@ -53,6 +53,8 @@ kubectl -n ricinfra create secret docker-registry nexus-creds \
 
   kubectl -n ricinfra patch serviceaccount default \
   -p '{"imagePullSecrets":[{"name":"nexus-creds"}]}'
+
+
   
 **Then restart the failing pods:**
 kubectl -n ricinfra delete pod tiller-secret-generator-cshgf
@@ -60,5 +62,31 @@ kubectl -n ricinfra delete pod deployment-tiller-ricxapp-676dfd8664-fqk4p
 
 # make all pods in ricinfra use it by default
 kubectl -n ricinfra patch serviceaccount default \
+
+**If curl status, hhtp 1/1 issue ok not comes:**
+cat <<'EOF' | kubectl apply -f -
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: appmgr-ing
+  namespace: ricplt
+  annotations:
+    kubernetes.io/ingress.class: kong
+    konghq.com/strip-path: "true"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /appmgr
+        pathType: Prefix
+        backend:
+          service:
+            name: service-ricplt-appmgr-http
+            port:
+              number: 8080
+EOF
+
+
+
   -p '{"imagePullSecrets":[{"name":"nexus-creds"}]}'
 
