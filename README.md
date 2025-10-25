@@ -42,4 +42,16 @@ kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/v0.24.2/Do
 kubectl taint nodes --all node-role.kubernetes.io/control-plane:NoSchedule- || true
 
 
+**Optional:** if any pods are not running, image pull back off problem
+
+# create a docker-registry secret (replace USER/PASS/EMAIL)
+kubectl -n ricinfra create secret docker-registry nexus-creds \
+  --docker-server=nexus3.o-ran-sc.org:10002 \
+  --docker-username='<YOUR_USER>' \
+  --docker-password='<YOUR_PASS>' \
+  --docker-email='you@example.com'
+
+# make all pods in ricinfra use it by default
+kubectl -n ricinfra patch serviceaccount default \
+  -p '{"imagePullSecrets":[{"name":"nexus-creds"}]}'
 
