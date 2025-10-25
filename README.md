@@ -51,6 +51,13 @@ kubectl -n ricinfra create secret docker-registry nexus-creds \
   --docker-password='<YOUR_PASS>' \
   --docker-email='you@example.com'
 
+  kubectl -n ricinfra patch serviceaccount default \
+  -p '{"imagePullSecrets":[{"name":"nexus-creds"}]}'
+  
+**Then restart the failing pods:**
+kubectl -n ricinfra delete pod tiller-secret-generator-cshgf
+kubectl -n ricinfra delete pod deployment-tiller-ricxapp-676dfd8664-fqk4p
+
 # make all pods in ricinfra use it by default
 kubectl -n ricinfra patch serviceaccount default \
   -p '{"imagePullSecrets":[{"name":"nexus-creds"}]}'
