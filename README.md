@@ -1,0 +1,1 @@
+# Near-RT-RIC_installation_ubuntu22.04_OAI
