@@ -1,1 +1,4 @@
+How to get IP of RIC: Get the IP of Kong Ingress/load balancer
+
+kubectl -n ricplt get svc | grep kong
 
